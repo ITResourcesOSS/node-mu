@@ -36,7 +36,7 @@ JWT_SECRET=configure-here-jwt-secret-for-the-service
 JWT_EXPIRATION_MINUTES=13149000
 
 # MySQL connection
-DB_CLIENT=<one from mysql|mysql2|pg|mongodb>
+DB_CLIENT=mysql2
 DB_NAME=set-here-the-name-of-your-db-schema
 DB_HOST=set-here-the-host-of-your-db
 DB_USER=set-here-the-user-name
@@ -65,31 +65,30 @@ index.js
 ````
 'use strict';
 
-const nodemu = require('node-mu');
-const SimpleRoute = require('./simple-routes');
+const { Service } = require('node-mu');
+const SimpleRoute = require('./simple-route');
 
 Promise = require('bluebird');
 
-class TestService extends nodemu.Service {
-  constructor(serviceBasePath) {
-    super(serviceBasePath);
+class SimpleService extends Service {
+  constructor(basePath) {
+    super(basePath);
   }
 
   $setupRoutes() {
     this.logger.info('setting up routes');
-    const route = new SimpleRoute();
+    const simpleRoute = new SimpleRoute();
     this.addRoute(simpleRoute);
   }
 }
 
-
 const start = async() => {
   try {
     console.log('Service initialization');
-    const service = new TestService(__dirname);
+    const service = new SimpleService(__dirname);
     await service.start();
   } catch(err) {
-    throw err;  
+    throw err;
   }
 };
 
@@ -97,12 +96,12 @@ start()
   .then(() => {
     console.log('\uD83D\uDC4D service started... bring me some \uD83C\uDF7A\uD83C\uDF7A\uD83C\uDF7A');
   }).catch((err) => {
-    console.error(`service crashed at startup: ${err}`);
-    process.exit(1);
-  });
+  console.error(`service crashed at startup: ${err}`);
+  process.exit(1);
+});
 ````
 
-simple-routes.js
+simple-route.js
 ````
 'use strict';
 
@@ -114,13 +113,14 @@ const path = '/simple';
 class SimpleRoute extends Route {
   constructor() {
     super(path);
+    this.logger.info('[*] SimpleRoute initialized');
   }
 
   $setupRoutes() {
-    const controller = new SimpleController();
-    this.addRoute('get', '/info', controller.info);
+    const simpleController = new SimpleController();
+    this.addRoute('get', '/info', simpleController.info);
+    this.logger.debug('[*] /info route configured');
   }
-
 }
 
 module.exports = SimpleRoute;
@@ -135,13 +135,13 @@ const { Controller } = require('node-mu');
 class SimpleController extends Controller {
   constructor() {
     super();
-    this.logger.info('Simple controller initialized');
+    this.logger.info('[*] Simple Controller initialized');
   }
 
   info(req, res) {
+    this.logger.debug('[*] Request to get controller information');
     res.json({ controller: 'SimpleController', version: '1.0' });
   }
-
 }
 
 module.exports = SimpleController;
