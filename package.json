@@ -6,6 +6,11 @@
   "author": "Luca Stasio <joshuagame@gmail.com>",
   "license": "MIT",
   "private": false,
+  "keywords": [
+    "microservices",
+    "amqp",
+    "router"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/ITResourcesOSS/node-mu.git"
