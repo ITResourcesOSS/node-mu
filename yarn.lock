@@ -337,6 +337,10 @@ etag@~1.8.1:
   version "1.8.1"
   resolved "https://registry.yarnpkg.com/etag/-/etag-1.8.1.tgz#41ae2eeb65efa62268aebfea83ac7d79299b0887"
 
+events@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/events/-/events-2.0.0.tgz#cbbb56bf3ab1ac18d71c43bb32c86255062769f2"
+
 expand-brackets@^2.1.4:
   version "2.1.4"
   resolved "https://registry.yarnpkg.com/expand-brackets/-/expand-brackets-2.1.4.tgz#b77735e315ce30f6b6eff0f83b04151a22449622"
@@ -967,6 +971,7 @@ negotiator@0.6.1:
 "node-mu@file:.":
   version "0.0.1"
   dependencies:
+    amqplib "^0.5.2"
     auto-bind "^1.2.0"
     bluebird "^3.5.1"
     dotenv-safe "^5.0.1"
