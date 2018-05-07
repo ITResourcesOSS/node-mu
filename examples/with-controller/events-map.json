@@ -1,10 +1,12 @@
 {
     "events": [
         {
-            "name": "evt1",
+            "name": "new_user",
             "amqpConfig": {
-                "exchange": "exch1",
-                "routing": "routing1"
+                "exchange": {
+                    "name": "uaa_events",
+                    "route": "uaa_new_user_route"
+                }
             }
         },
         {
