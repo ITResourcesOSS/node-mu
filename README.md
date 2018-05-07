@@ -329,3 +329,6 @@ class UserController extends ApiEventsEmitterController {
 
 module.exports = UserController;
 ````
+
+### License
+Licensed under [MIT license](https://opensource.org/licenses/MIT)
