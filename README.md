@@ -48,6 +48,9 @@ AMQP_URL=amqp://set-here-a-user:set-here-a-pwd@set-here-the-host:5672/set-here-a
 AMQP_URL_TESTS=amqp://set-here-a-TEST-user:set-here-a-pwd@set-here-the-TEST-host:5672/set-here-a-TEST-VHOST
 AMQP_EXCHANGE_NAME=set_here_the_name_of_an_exchange
 
+# Events map: i.e. "events-map.json"
+EVENTS_MAP_FILE=set/here/your/json/file
+
 # logging
 LOG_PATH=../path/for/log/file
 LOG_CONSOLE=true-or-false
