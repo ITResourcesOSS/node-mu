@@ -2,6 +2,7 @@
 
 const { Service, AmqpPublisher, config } = require('../../lib');
 const SimpleRoute = require('./simple-route');
+const UserRoute = require('./user-route');
 
 Promise = require('bluebird');
 
@@ -12,9 +13,12 @@ class SimpleService extends Service {
 
   $setupRoutes() {
     this.logger.info('setting up routes');
+    
     const simpleRoute = new SimpleRoute();
     this.addRoute(simpleRoute);
-    
+
+    const userRoute = new UserRoute();
+    this.addRoute(userRoute);    
     /*const evt = {
       type: 'new_user',
       data: {

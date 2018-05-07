@@ -1,10 +1,10 @@
 'use strict';
 
-const { ApiEventsEmitterController } = require('../../lib').Controllers;
+const { Controller } = require('../../lib').Controllers;
 const { AmqpPublisher } = require('../../lib');
 const Hertzy = require('hertzy');
 
-class SimpleController extends ApiEventsEmitterController {
+class SimpleController extends Controller {
   constructor() {
     super();
     this.logger.info('[*] Simple Controller initialized');
@@ -14,7 +14,7 @@ class SimpleController extends ApiEventsEmitterController {
     try {
       this.logger.debug('[*] Request to get controller information');
 
-      this.emit('new_user', { id: 123, username: 'frank.zappa' });
+      //this.emit('new_user', { id: 123, username: 'frank.zappa' });
 
       return res.json({ controller: 'SimpleController', version: '2.0' });
 
