@@ -65,8 +65,9 @@ index.js
 ````
 'use strict';
 
-const { Service } = require('node-mu');
+const { Service, AmqpPublisher, config } = require('../../lib');
 const SimpleRoute = require('./simple-route');
+const UserRoute = require('./user-route');
 
 Promise = require('bluebird');
 
@@ -77,8 +78,12 @@ class SimpleService extends Service {
 
   $setupRoutes() {
     this.logger.info('setting up routes');
+    
     const simpleRoute = new SimpleRoute();
     this.addRoute(simpleRoute);
+
+    const userRoute = new UserRoute();
+    this.addRoute(userRoute);    
   }
 }
 
@@ -86,6 +91,7 @@ const start = async() => {
   try {
     console.log('Service initialization');
     const service = new SimpleService(__dirname);
+    console.log
     await service.start();
   } catch(err) {
     throw err;
@@ -105,7 +111,7 @@ simple-route.js
 ````
 'use strict';
 
-const { Route } = require('node-mu');
+const { Route } = require('../../lib');
 const SimpleController = require('./simple-controller');
 
 const path = '/simple';
@@ -130,7 +136,9 @@ simple-controller.js
 ````
 'use strict';
 
-const { Controller } = require('node-mu');
+const { Controller } = require('../../lib').Controllers;
+const { AmqpPublisher } = require('../../lib');
+const Hertzy = require('hertzy');
 
 class SimpleController extends Controller {
   constructor() {
@@ -138,12 +146,154 @@ class SimpleController extends Controller {
     this.logger.info('[*] Simple Controller initialized');
   }
 
-  info(req, res) {
-    this.logger.debug('[*] Request to get controller information');
-    res.json({ controller: 'SimpleController', version: '1.0' });
+  async info(req, res, next) {
+    try {
+      this.logger.debug('[*] Request to get controller information');
+
+      //this.emit('new_user', { id: 123, username: 'frank.zappa' });
+
+      return res.json({ controller: 'SimpleController', version: '2.0' });
+
+    
+    } catch (err) {
+      return next(err);
+    }
+    
   }
 }
 
 module.exports = SimpleController;
 ````
 
+user-route.js
+````
+'use strict';
+
+const { Route } = require('../../lib');
+const UserController = require('./user-controller');
+
+const path = '/users';
+
+class UserRoute extends Route {
+  constructor() {
+    super(path);
+    this.logger.info('[*] UserRoute initialized');
+  }
+
+  $setupRoutes() {
+    const userController = new UserController();
+    this.addRoute('get', '/', userController.getUsers);
+    this.addRoute('post', '/', userController.addUser);
+    this.addRoute('put', '/:userId', userController.updateUser);
+    this.addRoute('delete', '/:userId', userController.deleteUser);
+  }
+}
+
+module.exports = UserRoute;
+````
+
+simple-controller.js
+````
+'use strict';
+
+const { ApiEventsEmitterController } = require('../../lib').Controllers;
+const { AmqpPublisher } = require('../../lib');
+const Hertzy = require('hertzy');
+
+let users = [
+  { id: 1, username: 'frank.zappa', password: 'cuccurullo' },
+  { id: 2, username: 'johnny', password: 'beegood' },
+  { id: 3, username: 'joshuagame', password: 'shallweplayagame!' }
+];
+
+class UserController extends ApiEventsEmitterController {
+
+  constructor() {
+    super();
+    this.logger.info('[*] User Controller initialized');
+    this._logUsersDb();
+  }
+
+//this.emit('new_user', { id: 123, username: 'frank.zappa' });
+
+  async getUsers(req, res, next) {
+    try {
+      this.logger.debug('[*] Request to get Users');
+      this._logUsersDb();
+      // here you should have an AWAIT get on the DB.
+      return res.json(users);
+    } catch (err) {
+      return next(err);
+    }
+  }
+
+  async addUser(req, res, next) {
+    try {
+      const username = req.body.username;
+      const password = req.body.password;
+
+      let lastId = users.length > 0 ? users[users.length-1].id : 0;
+      const newUser = {id: ++lastId, username: username, password: password};
+      users.push(newUser);
+      
+      this.emit('new_user', newUser);
+
+      this._logUsersDb();
+      return res.json(users);
+    } catch (err) {
+      return next(err);
+    }
+  }
+
+  async updateUser(req, res, next) {
+    try {
+      const userId = req.params.userId;
+      const username = req.body.username;
+      const password = req.body.password;
+      this.logger.debug(`updating user id ${userId}`);
+      for (let idx in users) {
+        const user = users[idx];
+        if (user.id == userId) {
+          users[idx].username = username;
+          users[idx].password = password;
+
+          this.emit('user_updated', users[idx]);
+          break;
+        }
+      }
+      
+      this._logUsersDb();
+      return res.json(users);
+    } catch (err) {
+      return next(err);
+    }
+  }
+
+  async deleteUser(req, res, next) {
+    try {
+      const userId = req.params.userId;
+      for (let idx in users) {
+        const user = users[idx];
+        if (user.id == userId) {
+          const removedUser = users[idx];
+          users.splice(idx, 1);
+
+          this.emit('user_removed', removedUser);
+          break;
+        }
+      }
+
+      this._logUsersDb();
+      return res.json(users);
+    } catch (err) {
+      return next(err);
+    }
+  }
+
+  _logUsersDb() {
+    this.logger.debug(`users: ${JSON.stringify(users, undefined, 2)}`);
+  }
+}
+
+module.exports = UserController;
+````

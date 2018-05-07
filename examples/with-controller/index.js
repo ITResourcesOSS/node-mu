@@ -19,21 +19,7 @@ class SimpleService extends Service {
 
     const userRoute = new UserRoute();
     this.addRoute(userRoute);    
-    /*const evt = {
-      type: 'new_user',
-      data: {
-        id: 12,
-        username: 'joshuagame'
-      }
-    };
-    this.emit(evt);*/
   }
-
-  /*
-  emit(evt) {
-    this.amqpConnectionManager.channel.publish('uaa_events', 'uaa_new_user_route', new Buffer(JSON.stringify(evt)));
-  }
-  */
 }
 
 const start = async() => {
