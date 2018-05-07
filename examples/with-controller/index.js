@@ -1,6 +1,6 @@
 'use strict';
 
-const { Service, AmqpPublisher } = require('../../lib');
+const { Service, AmqpPublisher, config } = require('../../lib');
 const SimpleRoute = require('./simple-route');
 
 Promise = require('bluebird');
@@ -36,15 +36,7 @@ const start = async() => {
   try {
     console.log('Service initialization');
     const service = new SimpleService(__dirname);
-    service.on('amqp-connection-ok', () => {
-      const amqpPublisher = new AmqpPublisher({
-        type: 'exchange',
-        exchange: {
-          name: 'exchange-name',
-          route: 'route-name'
-        }
-      });
-    });
+    console.log
     await service.start();
   } catch(err) {
     throw err;

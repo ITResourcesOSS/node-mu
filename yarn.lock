@@ -420,6 +420,12 @@ expect-ct@0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/expect-ct/-/expect-ct-0.1.0.tgz#52735678de18530890d8d7b95f0ac63640958094"
 
+express-validation@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/express-validation/-/express-validation-1.0.2.tgz#7d589dd3b257c55b3e004665b6c69cb12cc2b142"
+  dependencies:
+    lodash "^4.9.0"
+
 express-winston@^2.5.1:
   version "2.5.1"
   resolved "https://registry.yarnpkg.com/express-winston/-/express-winston-2.5.1.tgz#0263581b4441a06493ba31882e3c5250791522f0"
@@ -670,9 +676,17 @@ helmet@^3.12.0:
     referrer-policy "1.1.0"
     x-xss-protection "1.1.0"
 
+hertzy@^0.0.7:
+  version "0.0.7"
+  resolved "https://registry.yarnpkg.com/hertzy/-/hertzy-0.0.7.tgz#417e6a2d9bf8046c5eba9ce203e9d492b25f428c"
+
 hide-powered-by@1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/hide-powered-by/-/hide-powered-by-1.0.0.tgz#4a85ad65881f62857fc70af7174a1184dccce32b"
+
+hoek@5.x.x:
+  version "5.0.3"
+  resolved "https://registry.yarnpkg.com/hoek/-/hoek-5.0.3.tgz#b71d40d943d0a95da01956b547f83c4a5b4a34ac"
 
 homedir-polyfill@^1.0.1:
   version "1.0.1"
@@ -705,6 +719,10 @@ http-errors@~1.6.2:
     inherits "2.0.3"
     setprototypeof "1.1.0"
     statuses ">= 1.4.0 < 2"
+
+http-status@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/http-status/-/http-status-1.1.0.tgz#9e86fece382d84afd56521c50691076f6dc9841c"
 
 http@^0.0.0:
   version "0.0.0"
@@ -857,6 +875,12 @@ isarray@1.0.0, isarray@~1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/isarray/-/isarray-1.0.0.tgz#bb935d48582cba168c06834957a54a3e07124f11"
 
+isemail@3.x.x:
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/isemail/-/isemail-3.1.2.tgz#937cf919002077999a73ea8b1951d590e84e01dd"
+  dependencies:
+    punycode "2.x.x"
+
 isexe@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/isexe/-/isexe-2.0.0.tgz#e8fbf374dc556ff8947a10dcb0572d633f2cfa10"
@@ -874,6 +898,14 @@ isobject@^3.0.0, isobject@^3.0.1:
 isstream@0.1.x:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/isstream/-/isstream-0.1.2.tgz#47e63f7af55afa6f92e1500e690eb8b8529c099a"
+
+joi@^13.2.0:
+  version "13.2.0"
+  resolved "https://registry.yarnpkg.com/joi/-/joi-13.2.0.tgz#72307f1765bb40b068361f9368a4ba1092b8478e"
+  dependencies:
+    hoek "5.x.x"
+    isemail "3.x.x"
+    topo "3.x.x"
 
 json-schema-traverse@^0.3.0:
   version "0.3.1"
@@ -939,7 +971,7 @@ lodash.reduce@4.6.0:
   version "4.6.0"
   resolved "https://registry.yarnpkg.com/lodash.reduce/-/lodash.reduce-4.6.0.tgz#f1ab6b839299ad48f784abbf476596f03b914d3b"
 
-lodash@^4.17.4, lodash@^4.17.5, lodash@~4.17.5:
+lodash@^4.17.4, lodash@^4.17.5, lodash@^4.9.0, lodash@~4.17.5:
   version "4.17.10"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.10.tgz#1b7793cf7259ea38fb3661d4d38b3260af8ae4e7"
 
@@ -1112,12 +1144,16 @@ nocache@2.0.0:
     bluebird "^3.5.1"
     body-parser "^1.18.2"
     compression "^1.7.2"
+    cors "^2.8.4"
     dotenv-safe "^5.0.1"
     events "^2.0.0"
     express "^4.16.3"
+    express-validation "^1.0.2"
     express-winston "^2.5.1"
     helmet "^3.12.0"
     http "^0.0.0"
+    http-status "^1.1.0"
+    joi "^13.2.0"
     knex "^0.14.6"
     method-override "^2.3.10"
     mysql2 "^1.5.3"
@@ -1255,7 +1291,7 @@ pseudomap@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/pseudomap/-/pseudomap-1.0.2.tgz#f052a28da70e618917ef0a8ac34c1ae5a68286b3"
 
-punycode@^2.1.0:
+punycode@2.x.x, punycode@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/punycode/-/punycode-2.1.0.tgz#5f863edc89b96db09074bad7947bf09056ca4e7d"
 
@@ -1579,6 +1615,12 @@ to-regex@^3.0.1, to-regex@^3.0.2:
     extend-shallow "^3.0.2"
     regex-not "^1.0.2"
     safe-regex "^1.1.0"
+
+topo@3.x.x:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/topo/-/topo-3.0.0.tgz#37e48c330efeac784538e0acd3e62ca5e231fe7a"
+  dependencies:
+    hoek "5.x.x"
 
 triple-beam@^1.1.0:
   version "1.2.0"

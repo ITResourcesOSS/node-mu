@@ -1,0 +1,18 @@
+{
+    "events": [
+        {
+            "name": "evt1",
+            "amqpConfig": {
+                "exchange": "exch1",
+                "routing": "routing1"
+            }
+        },
+        {
+            "name": "evt2",
+            "amqpConfig": {
+                "exchange": "exch2",
+                "routing": "routing2"
+            }
+        }
+    ]
+}
