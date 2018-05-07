@@ -1,6 +1,6 @@
 {
   "name": "node-mu",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Minimalistic node.js microservices framework on top of Express.js",
   "main": "index.js",
   "author": "Luca Stasio <joshuagame@gmail.com>",
@@ -35,7 +35,6 @@
     "knex": "^0.14.6",
     "method-override": "^2.3.10",
     "mysql2": "^1.5.3",
-    "node-mu": "file:../node-mu",
     "objection": "^1.1.7",
     "server-destroy": "^1.0.1",
     "uuid": "^3.2.1",
