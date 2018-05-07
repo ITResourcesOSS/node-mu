@@ -4,6 +4,7 @@ const { ApiEventsEmitterController } = require('../../lib').Controllers;
 const { AmqpPublisher } = require('../../lib');
 const Hertzy = require('hertzy');
 
+/* Here we use a simple array to simulate the DB */
 let users = [
   { id: 1, username: 'frank.zappa', password: 'cuccurullo' },
   { id: 2, username: 'johnny', password: 'beegood' },
@@ -17,8 +18,6 @@ class UserController extends ApiEventsEmitterController {
     this.logger.info('[*] User Controller initialized');
     this._logUsersDb();
   }
-
-//this.emit('new_user', { id: 123, username: 'frank.zappa' });
 
   async getUsers(req, res, next) {
     try {

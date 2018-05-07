@@ -59,7 +59,40 @@ LOG_REQUESTS_FILE=set-her-your-log-file-for-requests-logs.log
 LOG_ERRORS_CONSOLE=true-or-false
 ````
 
-
+events-map.json
+````
+{
+    "events": [
+        {
+            "name": "new_user",
+            "amqpConfig": {
+                "exchange": {
+                    "name": "uaa_events",
+                    "route": "uaa_new_user_route"
+                }
+            }
+        },
+        {
+            "name": "user_updated",
+            "amqpConfig": {
+                "exchange": {
+                    "name": "uaa_events",
+                    "route": "uaa_new_user_route"
+                }
+            }
+        },
+        {
+            "name": "user_removed",
+            "amqpConfig": {
+                "exchange": {
+                    "name": "uaa_events",
+                    "route": "uaa_new_user_route"
+                }
+            }
+        }
+    ]
+}
+````
 
 index.js
 ````
@@ -149,12 +182,7 @@ class SimpleController extends Controller {
   async info(req, res, next) {
     try {
       this.logger.debug('[*] Request to get controller information');
-
-      //this.emit('new_user', { id: 123, username: 'frank.zappa' });
-
       return res.json({ controller: 'SimpleController', version: '2.0' });
-
-    
     } catch (err) {
       return next(err);
     }
@@ -200,6 +228,7 @@ const { ApiEventsEmitterController } = require('../../lib').Controllers;
 const { AmqpPublisher } = require('../../lib');
 const Hertzy = require('hertzy');
 
+/* Here we use a simple array to simulate the DB */
 let users = [
   { id: 1, username: 'frank.zappa', password: 'cuccurullo' },
   { id: 2, username: 'johnny', password: 'beegood' },
