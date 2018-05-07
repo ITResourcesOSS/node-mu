@@ -1,10 +1,10 @@
 'use strict';
 
-const { Controller } = require('../../lib');
+const { ApiEventsEmitterController } = require('../../lib').Controllers;
 const { AmqpPublisher } = require('../../lib');
 const Hertzy = require('hertzy');
 
-class SimpleController extends Controller {
+class SimpleController extends ApiEventsEmitterController {
   constructor() {
     super();
     this.logger.info('[*] Simple Controller initialized');
@@ -13,13 +13,6 @@ class SimpleController extends Controller {
   async info(req, res, next) {
     try {
       this.logger.debug('[*] Request to get controller information');
-/*
-      const apiEvents = Hertzy.tune('api-events');
-      apiEvents.emit('new_user', {
-        id: 122,
-        username: 'frank'
-      });
-      */
 
       this.emit('new_user', { id: 123, username: 'frank.zappa' });
 
