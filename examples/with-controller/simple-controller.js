@@ -13,12 +13,7 @@ class SimpleController extends Controller {
   async info(req, res, next) {
     try {
       this.logger.debug('[*] Request to get controller information');
-
-      //this.emit('new_user', { id: 123, username: 'frank.zappa' });
-
       return res.json({ controller: 'SimpleController', version: '2.0' });
-
-    
     } catch (err) {
       return next(err);
     }
