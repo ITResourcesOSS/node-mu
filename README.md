@@ -331,4 +331,4 @@ module.exports = UserController;
 ````
 
 ### License
-Licensed under [MIT license](https://opensource.org/licenses/MIT)
+Licensed under [MIT license](https://github.com/ITResourcesOSS/node-mu/blob/master/LICENSE)
