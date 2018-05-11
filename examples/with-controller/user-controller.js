@@ -3,12 +3,13 @@
 const { ApiEventsEmitterController } = require('../../lib').Controllers;
 const { AmqpPublisher } = require('../../lib');
 const Hertzy = require('hertzy');
+const dayjs = require('dayjs');
 
 /* Here we use a simple array to simulate the DB */
 let users = [
-  { id: 1, username: 'frank.zappa', password: 'cuccurullo' },
-  { id: 2, username: 'johnny', password: 'beegood' },
-  { id: 3, username: 'joshuagame', password: 'shallweplayagame!' }
+  { id: 1, username: 'frank.zappa', password: 'cuccurullo', login: 'joshuagame@gmail.com' },
+  { id: 2, username: 'johnny', password: 'beegood', login: 'joshuagame@gmail.com' },
+  { id: 3, username: 'joshuagame', password: 'shallweplayagame!', login: 'joshuagame@gmail.com' }
 ];
 
 class UserController extends ApiEventsEmitterController {
@@ -34,12 +35,21 @@ class UserController extends ApiEventsEmitterController {
     try {
       const username = req.body.username;
       const password = req.body.password;
+      const login = req.body.login;
 
       let lastId = users.length > 0 ? users[users.length-1].id : 0;
-      const newUser = {id: ++lastId, username: username, password: password};
+      const newUser = {id: ++lastId, username: username, password: password, login: login};
       users.push(newUser);
       
-      this.emit('new_user', newUser);
+      const evt = {
+        type: 'new_user_evt',
+        spec: 'user_parent',
+        producer: 'uaa-service',
+        timestamp: dayjs(),
+        mailto: newUser.login,
+        payload: newUser
+      };
+      this.emit('new_user', evt);
 
       this._logUsersDb();
       return res.json(users);
@@ -53,14 +63,24 @@ class UserController extends ApiEventsEmitterController {
       const userId = req.params.userId;
       const username = req.body.username;
       const password = req.body.password;
+      const login = req.body.login;
       this.logger.debug(`updating user id ${userId}`);
       for (let idx in users) {
         const user = users[idx];
         if (user.id == userId) {
           users[idx].username = username;
           users[idx].password = password;
+          users[idx].login = login;
 
-          this.emit('user_updated', users[idx]);
+          const evt = {
+            type: 'new_user_evt',
+            spec: 'user_parent',
+            producer: 'uaa-service',
+            timestamp: dayjs(),
+            mailto: users[idx].login,
+            payload: users[idx]
+          };
+          this.emit('user_updated', evt);
           break;
         }
       }
@@ -81,6 +101,14 @@ class UserController extends ApiEventsEmitterController {
           const removedUser = users[idx];
           users.splice(idx, 1);
 
+          const evt = {
+            type: 'new_user_evt',
+            spec: 'user_parent',
+            producer: 'uaa-service',
+            timestamp: dayjs(),
+            mailto: removedUser.login,
+            payload: removedUser
+          };
           this.emit('user_removed', removedUser);
           break;
         }
