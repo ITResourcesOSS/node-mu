@@ -3,6 +3,7 @@
 const { Route } = require('../../lib');
 const SimpleController = require('./simple-controller');
 const simple = require('./simple-middleware');
+const Joi = require('joi');
 
 const path = '/simple';
 
@@ -10,6 +11,17 @@ class SimpleRoute extends Route {
   constructor() {
     super(path);
     this.logger.info('[*] SimpleRoute initialized');
+  }
+
+  $setupValidationRules() {
+    this.setValidationRules({
+      '/info': {
+        headers: {
+          'host': Joi.string().required(),
+          'user-agent': Joi.string().required()
+        }
+      }
+    });
   }
 
   $setupRoutes() {
