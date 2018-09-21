@@ -1,0 +1,31 @@
+{
+  "events": [
+    {
+      "name": "new_user",
+      "amqpConfig": {
+        "exchange": {
+          "name": "uaa_events",
+          "route": "uaa_new_user_route"
+        }
+      }
+    },
+    {
+      "name": "user_updated",
+      "amqpConfig": {
+        "exchange": {
+          "name": "uaa_events",
+          "route": "uaa_new_user_route"
+        }
+      }
+    },
+    {
+      "name": "user_removed",
+      "amqpConfig": {
+        "exchange": {
+          "name": "uaa_events",
+          "route": "uaa_new_user_route"
+        }
+      }
+    }
+  ]
+}

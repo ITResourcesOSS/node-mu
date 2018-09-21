@@ -1,8 +1,23 @@
-**_This project has moved to https://bitbucket.org/itross/node-mu/src/master/._**
-
 ## node-mu
 
 A node.js minimalistic microservice framework. At this stage node-mu it is not yet production-ready. It is under heavy testing.
+
+### Release notes
+As of this 0.1.1 version, we introduce Inversion of Control using the [inversify](https://github.com/inversify) IoC container library.
+
+We introduce the new _Producer_ and _Service_ concept.
+All of the _node-mu_ components are now _injectable_ thanks to the relative decorator functions:
+
+* _injectable_
+* _componente_
+* _provider_
+* _route_
+* _controller_
+* _service_
+* _repository_
+* _factoryFunction_
+* _application_
+* _inject_
 
 ### Installation
 Using npm:
@@ -16,52 +31,85 @@ $ yarn add node-mu
 
 ### Example
 
-.env
+config/default.yml
 ````
-# environment
-NODE_ENV=development
+########################################################################
+# Service configuration.
+#
+# This configuration will be overridden by the NODE_ENV profile you use,
+# for example development.yml for development profile or production.yml
+# for production a so on.
+#
+########################################################################
 
-# REST API server port
-PORT=5005
-BASE_ROUTING_PATH=/set/here/api/base/routing/path
+service:
+  group: Examples
+  name: SimplerService
+  version:
+    major: 0
+    minor: 0
+    status: 0   # 0: alpha, 1: beta, 2: release, 3: final
 
-# service info
-SERVICE_GROUP=ServiceGroupName
-SERVICE_NAME=ServiceName
-SERVICE_VERSION_MAJOR=1
-SERVICE_VERSION_MINOR=0
-# 0: alpha - 1: beta - 2: release - 3: final
-SERVICE_VERSION_STATUS=0
+api:
+  endpoint:
+    port: 5001
+    baseRoutingPath: /api/v2
+  security:
+    enabled: true
+    jwt:
+      secret: configure-here-jwt-secret-for-the-service
+      expiration:
+        enabled: true
+        minutes: 13149000
 
-# Authentication JWT secret
-JWT_SECRET=configure-here-jwt-secret-for-the-service
-JWT_EXPIRATION_MINUTES=13149000
+management:
+  endpoint:
+    port: 5101
+    baseRoutingPath: /mgmt
+  health:
+    path: /health
+    full: true
 
-# MySQL connection
-DB_CLIENT=mysql2
-DB_NAME=set-here-the-name-of-your-db-schema
-DB_HOST=set-here-the-host-of-your-db
-DB_USER=set-here-the-user-name
-DB_PWD=set-here-the-user-password
-DB_CHARSET=utf8|...
 
-# AMQP connection
-AMQP_URL=amqp://set-here-a-user:set-here-a-pwd@set-here-the-host:5672/set-here-a-VHOST
-AMQP_URL_TESTS=amqp://set-here-a-TEST-user:set-here-a-pwd@set-here-the-TEST-host:5672/set-here-a-TEST-VHOST
-AMQP_EXCHANGE_NAME=set_here_the_name_of_an_exchange
+jwt:
+  secret: configure-here-jwt-secret-for-the-service
+  expiration:
+    enabled: true
+    minutes: 13149000
 
-# Events map: i.e. "events-map.json"
-EVENTS_MAP_FILE=set/here/your/json/file
+# optional configuration to open a db connection
+db:
+  client: mysql2
+  connection:
+    host: set-here-the-host-of-your-db
+    database: set-here-the-name-of-your-db-schema
+    user: set-here-the-user-name
+    password: set-here-the-user-password
+    charset: utf8
 
-# logging
-LOG_PATH=../path/for/log/file
-LOG_CONSOLE=true-or-false
-LOG_FILE=set-here-your-log-file-name.log
-LOG_LEVEL=set-here-your-log-level_(INFO,DEBUG,...)
-LOG_JSON=true-or-false
-LOG_REQUESTS_CONSOLE=true-or-false
-LOG_REQUESTS_FILE=set-her-your-log-file-for-requests-logs.log
-LOG_ERRORS_CONSOLE=true-or-false
+# optional configurtion to open and AMQP connection
+amqp:
+  url: amqp://set-here-a-user:set-here-a-pwd@set-here-the-host:5672/set-here-a-VHOST
+  exchange:
+    name: set_here_the_name_of_an_exchange
+
+events:
+  mapFile: set/here/your/json/file
+
+log:
+  path: ../path/for/log/file
+  console: true|false
+  level: set-here-your-log-level_(INFO,DEBUG,...)
+  json: true|false
+  requests:
+    console: true|false
+  errors:
+    console: true|false
+
+
+# should match your Git repo version
+info:
+  version: your.service.version
 ````
 
 events-map.json
@@ -100,237 +148,300 @@ events-map.json
 ````
 
 index.js
-````
-'use strict';
+```javascript
+const build = require('../../lib');
+const SimpleService = require('./simple-service');
 
-const { Service, AmqpPublisher, config } = require('../../lib');
-const SimpleRoute = require('./simple-route');
-const UserRoute = require('./user-route');
-
-Promise = require('bluebird');
-
-class SimpleService extends Service {
-  constructor(basePath) {
-    super(basePath);
-  }
-
-  $setupRoutes() {
-    this.logger.info('setting up routes');
-    
-    const simpleRoute = new SimpleRoute();
-    this.addRoute(simpleRoute);
-
-    const userRoute = new UserRoute();
-    this.addRoute(userRoute);    
-  }
-}
-
-const start = async() => {
+const start = async () => {;
   try {
-    console.log('Service initialization');
-    const service = new SimpleService(__dirname);
-    console.log
-    await service.start();
-  } catch(err) {
+    const service = build(SimpleService);
+    await service.run();
+  } catch (err) {
     throw err;
   }
 };
 
 start()
   .then(() => {
-    console.log('\uD83D\uDC4D service started... bring me some \uD83C\uDF7A\uD83C\uDF7A\uD83C\uDF7A');
+    console.log(`\uD83D\uDE80  node-\u03BC service started [pid: ${process.pid}]... bring me some \uD83C\uDF7A \uD83C\uDF7A \uD83C\uDF7A`);
   }).catch((err) => {
-  console.error(`service crashed at startup: ${err}`);
+  console.error(`\uD83D\uDD25  service crashed at startup: ${err}`);
   process.exit(1);
 });
-````
+```
+
+simple-service.js
+```javascript
+const {container, injectable, component, application, inject} = require('../../lib').ioc;
+const {DbConnectionManager, Api, AmqpConnectionManager, EventsEmitter} = require('../../lib').Providers;
+const Application = require('../../lib').Application;
+const SimpleRoute = require('./simple-route');
+
+module.exports =
+  inject([
+      DbConnectionManager,
+      AmqpConnectionManager,
+      EventsEmitter,
+      Api
+    ],
+    application(
+      class SimpleService extends Application {
+        constructor(dbConnectionManager, amqpConnectionManager, eventsEmitter, api) {
+          super();
+          this.dbConnectionManager = dbConnectionManager;
+          this.amqpConnectionManager = amqpConnectionManager;
+          this.eventsEmitter = eventsEmitter;
+          this.api = api;
+          this._logger.info('SimpleServie started');
+        }
+
+        $bootstrap() {
+          // DO HERE WHAT YOU NEED DURING SERVICE INITIALIZATION
+        }
+      }
+    )
+  );
+```
 
 simple-route.js
-````
+```javascript
 'use strict';
 
+const { inject, route } = require('../../lib').ioc;
 const { Route } = require('../../lib');
 const SimpleController = require('./simple-controller');
+const Joi = require('joi');
 
 const path = '/simple';
 
-class SimpleRoute extends Route {
-  constructor() {
-    super(path);
-    this.logger.info('[*] SimpleRoute initialized');
-  }
+module.exports =
+  inject(
+    [SimpleController],
+    route(
+      class SimpleRoute extends Route {
+        constructor(simpleController) {
+          super(path);
+          this._simpleController = simpleController;
 
-  $setupRoutes() {
-    const simpleController = new SimpleController();
-    this.addRoute('get', '/info', simpleController.info);
-    this.logger.debug('[*] /info route configured');
-  }
-}
+          this._setRoutes();
+        }
 
-module.exports = SimpleRoute;
-````
+        _setRoutes() {
+          this.route('/simple').get('/info', this._simpleController.info);
 
-simple-controller.js
-````
-'use strict';
-
-const { Controller } = require('../../lib').Controllers;
-const { AmqpPublisher } = require('../../lib');
-const Hertzy = require('hertzy');
-
-class SimpleController extends Controller {
-  constructor() {
-    super();
-    this.logger.info('[*] Simple Controller initialized');
-  }
-
-  async info(req, res, next) {
-    try {
-      this.logger.debug('[*] Request to get controller information');
-      return res.json({ controller: 'SimpleController', version: '2.0' });
-    } catch (err) {
-      return next(err);
-    }
-    
-  }
-}
-
-module.exports = SimpleController;
-````
-
-user-route.js
-````
-'use strict';
-
-const { Route } = require('../../lib');
-const UserController = require('./user-controller');
-
-const path = '/users';
-
-class UserRoute extends Route {
-  constructor() {
-    super(path);
-    this.logger.info('[*] UserRoute initialized');
-  }
-
-  $setupRoutes() {
-    const userController = new UserController();
-    this.addRoute('get', '/', userController.getUsers);
-    this.addRoute('post', '/', userController.addUser);
-    this.addRoute('put', '/:userId', userController.updateUser);
-    this.addRoute('delete', '/:userId', userController.deleteUser);
-  }
-}
-
-module.exports = UserRoute;
-````
-
-simple-controller.js
-````
-'use strict';
-
-const { ApiEventsEmitterController } = require('../../lib').Controllers;
-const { AmqpPublisher } = require('../../lib');
-const Hertzy = require('hertzy');
-
-/* Here we use a simple array to simulate the DB */
-let users = [
-  { id: 1, username: 'frank.zappa', password: 'cuccurullo' },
-  { id: 2, username: 'johnny', password: 'beegood' },
-  { id: 3, username: 'joshuagame', password: 'shallweplayagame!' }
-];
-
-class UserController extends ApiEventsEmitterController {
-
-  constructor() {
-    super();
-    this.logger.info('[*] User Controller initialized');
-    this._logUsersDb();
-  }
-
-//this.emit('new_user', { id: 123, username: 'frank.zappa' });
-
-  async getUsers(req, res, next) {
-    try {
-      this.logger.debug('[*] Request to get Users');
-      this._logUsersDb();
-      // here you should have an AWAIT get on the DB.
-      return res.json(users);
-    } catch (err) {
-      return next(err);
-    }
-  }
-
-  async addUser(req, res, next) {
-    try {
-      const username = req.body.username;
-      const password = req.body.password;
-
-      let lastId = users.length > 0 ? users[users.length-1].id : 0;
-      const newUser = {id: ++lastId, username: username, password: password};
-      users.push(newUser);
-      
-      this.emit('new_user', newUser);
-
-      this._logUsersDb();
-      return res.json(users);
-    } catch (err) {
-      return next(err);
-    }
-  }
-
-  async updateUser(req, res, next) {
-    try {
-      const userId = req.params.userId;
-      const username = req.body.username;
-      const password = req.body.password;
-      this.logger.debug(`updating user id ${userId}`);
-      for (let idx in users) {
-        const user = users[idx];
-        if (user.id == userId) {
-          users[idx].username = username;
-          users[idx].password = password;
-
-          this.emit('user_updated', users[idx]);
-          break;
+          this.route('/complex', {
+              '/first': {
+                method: ['POST'],
+                headers: {
+                  'host': Joi.string().required(),
+                  'user-agent': Joi.string().required()
+                },
+                body: {
+                  username: Joi.string().required()
+                }
+              }
+            }
+          ).post('/first', (req, res) => {
+            this._logger.debug('****** VALIDATION OK: ' + req.body.username);
+            res.send(req.body.username);
+          }).get('/first', (req, res) => {
+            res.send('/first endpoint OK');
+          });
         }
       }
-      
-      this._logUsersDb();
-      return res.json(users);
-    } catch (err) {
-      return next(err);
-    }
-  }
+    )
+  );
+```
 
-  async deleteUser(req, res, next) {
-    try {
-      const userId = req.params.userId;
-      for (let idx in users) {
-        const user = users[idx];
-        if (user.id == userId) {
-          const removedUser = users[idx];
-          users.splice(idx, 1);
+simple-controller.js
+```javascript
+'use strict';
 
-          this.emit('user_removed', removedUser);
-          break;
+const {inject, controller} = require('../../lib').ioc;
+const {ApiEventsEmitterController} = require('../../lib').Controllers;
+const SimpleBusinessService = require('./services/simple-business-service');
+
+module.exports =
+  inject(
+    [SimpleBusinessService],
+    controller(
+      class SimpleController extends ApiEventsEmitterController {
+        constructor(simpleBusinessService) {
+          super();
+          this._simpleBusinessService = simpleBusinessService;
+        }
+
+        async info(req, res, next) {
+          this._logger.info('Request to get info');
+          try {
+            const info = await this._simpleBusinessService.info();
+            res.json(info);
+          } catch (err) {
+            this._logger.error(err);
+            next(err);
+          }
         }
       }
+    )
+  );
+```
 
-      this._logUsersDb();
-      return res.json(users);
-    } catch (err) {
-      return next(err);
-    }
+services/simple-business-service.js
+```javascript
+'use strict'
+
+const { inject, service } = require('../../../lib').ioc;
+const { Service } = require('../../../lib');
+const SimpleRepository = require('../simple-repository');
+
+module.exports =
+  inject(
+    [SimpleRepository],
+    service(
+      class SimpleBusinessService extends Service  {
+        constructor(simpleRepository) {
+          super();
+          this._simpleRepository = simpleRepository;
+        }
+
+        async info() {
+          return new Promise(async (resolve, reject) => {
+            try {
+              const user = await this._simpleRepository.findOne({login: 'jstest2111111111111'}, ['authorities']);
+              console.log('\n\nUSER: ' + JSON.stringify(user, null, 2) + '\n\n');
+              resolve(user);
+            } catch (err) {
+              reject(err);
+            }
+          });
+        }
+      }
+    )
+  );
+```
+
+user-model.js
+```javascript
+'use strict';
+
+const Model = require('objection').Model;
+const Authority = require('./authority-model');
+
+
+class User extends Model {
+
+  static get tableName() {
+    return 'USERS';
   }
 
-  _logUsersDb() {
-    this.logger.debug(`users: ${JSON.stringify(users, undefined, 2)}`);
+  static get jsonSchema() {
+    return {
+      type: 'object',
+      required: ['login', 'activated', 'created_by', 'created_date'],
+      properties: {
+        id: { type: 'bigInteger' },
+        login: { type: 'string', minLength: 1, maxLength:50 },
+        password_hash: { type: 'string', minLength: 1, maxLength: 60 },
+        first_name: { type: 'string', minLength: 1, maxLength: 50 },
+        last_name: { type: 'string', minLength: 1, maxLength: 50 },
+        email: { type: 'string', minLength: 7, maxLength: 100 },
+        image_url: { type: 'string', minLength: 1, maxLength: 256 },
+        activated: { type: 'bit'},
+        lang_key: { type: 'string', minLength: 2, maxLength: 6 },
+        activation_key: { type: 'string', minLength: 1, maxLength: 20 },
+        reset_key: { type: 'string', minLength: 1, maxLength: 20 },
+        created_by: { type: 'string', minLength: 1, maxLength: 50 },
+        created_date: { type: 'timestamp' },
+        reset_date: { type: 'timestamp' },
+        last_modified_by: { type: 'string', minLength: 1, maxLength: 50 },
+        last_modified_date: { type: 'timestamp' }
+      }
+    };
+  }
+
+  static get relationMappings() {
+    return {
+      authorities: {
+        relation: Model.ManyToManyRelation,
+        modelClass: Authority,
+        join: {
+          from: 'user.id',
+          through: {
+            from: 'user_authority.user_id',
+            to: 'user_authority.authority_name'
+          },
+          to: 'authority.name'
+        }
+      }
+    };
+  }
+
+}
+
+module.exports = User;
+```
+
+authority-model.js
+```javascript
+'use strict';
+
+const Model = require('objection').Model;
+
+class Authority extends Model {
+
+  static get tableName() {
+    return 'AUTHORITIES';
+  }
+
+  static get jsonSchema() {
+    return {
+      type: 'object',
+      required: ['name'],
+      properties: {
+        name: { type: 'string', minLength: 1, maxLength: 50 }
+      }
+    };
+  }
+
+  static get relationMappings() {
+    return {
+      users: {
+        relation: Model.ManyToManyRelation,
+        modelClass: __dirname + '/user-model',
+        join: {
+          from: 'authority.name',
+          through: {
+            from: 'user_authority.authority_name',
+            to: 'user_authority.user_id'
+          },
+          to: 'user.id'
+        }
+      }
+    };
   }
 }
 
-module.exports = UserController;
-````
+module.exports = Authority;
+```
+
+simple-repository.js
+```javascript
+'use strict';
+
+const {repository} = require('../../lib').ioc;
+const {Repository} = require('../../lib');
+const User = require('./user-model');
+
+module.exports =
+  repository(
+    class SimpleRepository extends Repository {
+      constructor() {
+        super(User);
+      }
+    }
+  );
+```
+
 
 ### License
 Licensed under the [MIT license](https://github.com/ITResourcesOSS/node-mu/blob/master/LICENSE).

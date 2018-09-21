@@ -1,0 +1,17 @@
+log:
+  level: info
+  console: true
+
+#db:
+#  client: mysql2
+#  connection:
+#    host: 10.10.10.151
+#    database: sp_uaa
+#    user: root
+#    password: darkstar
+#    charset: utf8
+#
+#amqp:
+#  url: amqp://sospmquser:sospmqpwd@10.10.10.151:5672/sospediatra
+#  exchange:
+#    name: uaa_events
