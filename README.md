@@ -1,8 +1,10 @@
 ## node-mu
 
+
 A node.js minimalistic microservice framework. At this stage node-mu it is not yet production-ready. It is under heavy testing.
 
 ### Release notes
+As of this 0.3.3 version, we're back on GitHub!<br/>
 As of this 0.1.1 version, we introduce Inversion of Control using the [inversify](https://github.com/inversify) IoC container library.
 
 We introduce the new _Producer_ and _Service_ concept.

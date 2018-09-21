@@ -1,6 +1,6 @@
 {
   "name": "node-mu",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "Minimalistic node.js microservices framework on top of Express.js",
   "main": "index.js",
   "author": "Luca Stasio <joshuagame@gmail.com>",
@@ -8,7 +8,7 @@
   "private": false,
   "repository": {
     "type": "git",
-    "url": "https://joshuagame@bitbucket.org/itross/node-mu.git"
+    "url": "https://github.com/ITResourcesOSS/node-mu.git"
   },
   "dependencies": {
     "amqplib": "^0.5.2",
