@@ -4,14 +4,15 @@
 A node.js minimalistic microservice framework. At this stage node-mu it is not yet production-ready. It is under heavy testing.
 
 ### Release notes
-As of this 0.3.3 version, we're back on GitHub!<br/>
-As of this 0.1.1 version, we introduce Inversion of Control using the [inversify](https://github.com/inversify) IoC container library.
+**v. 0.3.5**: fixed timezone in logging timestamp and in health service information.<br/>
+**v. 0.3.3**: we're back on GitHub!<br/>
+**v. 0.1.1**: we introduce Inversion of Control using the [inversify](https://github.com/inversify) IoC container library.
 
 We introduce the new _Producer_ and _Service_ concept.
 All of the _node-mu_ components are now _injectable_ thanks to the relative decorator functions:
 
 * _injectable_
-* _componente_
+* _component_
 * _provider_
 * _route_
 * _controller_
