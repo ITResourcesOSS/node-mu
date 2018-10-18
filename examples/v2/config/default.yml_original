@@ -1,0 +1,77 @@
+########################################################################
+# Service configuration.
+#
+# This configuration will be overridden by the NODE_ENV profile you use,
+# for example development.yml for development profile or production.yml
+# for production a so on.
+#
+########################################################################
+
+service:
+  group: Examples
+  name: SimplerService
+  version:
+    major: 0
+    minor: 0
+    status: 0   # 0: alpha, 1: beta, 2: release, 3: final
+
+api:
+  endpoint:
+    port: 5001
+    baseRoutingPath: /api/v2
+  security:
+    enabled: true
+    jwt:
+      secret: configure-here-jwt-secret-for-the-service
+      expiration:
+        enabled: true
+        minutes: 13149000
+
+management:
+  endpoint:
+    port: 5101
+    baseRoutingPath: /mgmt
+  health:
+    path: /health
+    full: true
+
+
+jwt:
+  secret: configure-here-jwt-secret-for-the-service
+  expiration:
+    enabled: true
+    minutes: 13149000
+
+# optional configuration to open a db connection
+db:
+  client: mysql2
+  connection:
+    host: set-here-the-host-of-your-db
+    database: set-here-the-name-of-your-db-schema
+    user: set-here-the-user-name
+    password: set-here-the-user-password
+    charset: utf8
+
+# optional configurtion to open and AMQP connection
+amqp:
+  url: amqp://set-here-a-user:set-here-a-pwd@set-here-the-host:5672/set-here-a-VHOST
+  exchange:
+    name: set_here_the_name_of_an_exchange
+
+events:
+  mapFile: set/here/your/json/file
+
+log:
+  path: ../path/for/log/file
+  console: true|false
+  level: set-here-your-log-level_(INFO,DEBUG,...)
+  json: true|false
+  requests:
+    console: true|false
+  errors:
+    console: true|false
+
+
+# should match your Git repo version
+info:
+  version: your.service.version

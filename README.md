@@ -4,6 +4,7 @@
 A node.js minimalistic microservice framework. At this stage node-mu it is not yet production-ready. It is under heavy testing.
 
 ### Release notes
+**v. 0.3.7**: now use Reflet metadatas in ioc decorators.<br/>
 **v. 0.3.6**: fixed a bug in request params validation.<br/>
 **v. 0.3.5**: fixed timezone in logging timestamp and in health service information.<br/>
 **v. 0.3.3**: we're back on GitHub!<br/>

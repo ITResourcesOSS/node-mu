@@ -8,21 +8,21 @@
 ########################################################################
 
 service:
-  group: Examples
-  name: SimplerService
+  group: SosMedico
+  name: UaaService
   version:
-    major: 0
+    major: 1
     minor: 0
     status: 0   # 0: alpha, 1: beta, 2: release, 3: final
 
 api:
   endpoint:
     port: 5001
-    baseRoutingPath: /api/v2
+    baseRoutingPath: /api/v1
   security:
     enabled: true
     jwt:
-      secret: configure-here-jwt-secret-for-the-service
+      secret: /B?D(G+KbPeShVmYq3t6w9z$C&F)H@McQfTjWnZr4u7x!A%D*G-KaNdRgUkXp2s5
       expiration:
         enabled: true
         minutes: 13149000
@@ -35,9 +35,8 @@ management:
     path: /health
     full: true
 
-
 jwt:
-  secret: configure-here-jwt-secret-for-the-service
+  secret: /B?D(G+KbPeShVmYq3t6w9z$C&F)H@McQfTjWnZr4u7x!A%D*G-KaNdRgUkXp2s5
   expiration:
     enabled: true
     minutes: 13149000
@@ -46,32 +45,60 @@ jwt:
 db:
   client: mysql2
   connection:
-    host: set-here-the-host-of-your-db
-    database: set-here-the-name-of-your-db-schema
-    user: set-here-the-user-name
-    password: set-here-the-user-password
+    host: localhost
+    database: sm_uaa
+    user: sm_uaa_usr
+    password: sm_uaa_pwd
     charset: utf8
+#    timezone: UTC2
+
+elasticsearch:
+  host: localhost
+  port: 9400
+  log:
+    type: file
+    level: trace
+    path: ./logs/elasticsearch
 
 # optional configurtion to open and AMQP connection
 amqp:
-  url: amqp://set-here-a-user:set-here-a-pwd@set-here-the-host:5672/set-here-a-VHOST
+  url: amqp://sosmmquser:sosmmqpwd@localhost:5672/sosmedico
   exchange:
-    name: set_here_the_name_of_an_exchange
+    name: uaa_events
 
 events:
-  mapFile: set/here/your/json/file
+  mapFile: events-map.json
+
+
+services:
+  api: /api/v1
+  user:
+    url: http://localhost:5001
+    path: /users
+  parent:
+    url: http://localhost:5002
+    path: /parents
+  son:
+    url: http://localhost:5002
+    path: /sons
+  pediatrician:
+    url: http://localhost:5003
+    path: /pediatricians
+  addressing:
+    url: http://localhost:5004
+    path: /addresses
 
 log:
-  path: ../path/for/log/file
-  console: true|false
-  level: set-here-your-log-level_(INFO,DEBUG,...)
-  json: true|false
+  path: ./logs
+  console: true
+  level: debug
+  json: false
   requests:
-    console: true|false
+    console: true
   errors:
-    console: true|false
+    console: false
 
 
 # should match your Git repo version
 info:
-  version: your.service.version
+  version: 1.0.0

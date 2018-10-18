@@ -12,6 +12,7 @@
 
 const build = require('../../lib');
 const SimpleService = require('./simple-service');
+const { Controller } = require('../../lib').ioc;
 
 const start = async () => {;
   try {
