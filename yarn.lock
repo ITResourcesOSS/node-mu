@@ -394,6 +394,16 @@ decode-uri-component@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/decode-uri-component/-/decode-uri-component-0.2.0.tgz#eb3913333458775cb84cd1a1fae062106bb87545"
 
+deep-equal@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/deep-equal/-/deep-equal-1.0.1.tgz#f5d260292b660e084eff4cdbc9f08ad3247448b5"
+
+deepcopy@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/deepcopy/-/deepcopy-1.0.0.tgz#cea0f3443b3617d2421e066be370cc8126f8959c"
+  dependencies:
+    type-detect "^4.0.8"
+
 define-property@^0.2.5:
   version "0.2.5"
   resolved "https://registry.yarnpkg.com/define-property/-/define-property-0.2.5.tgz#c35b1ef918ec3c990f9a5bc57be04aacec5c8116"
@@ -1138,6 +1148,13 @@ isobject@^3.0.0, isobject@^3.0.1:
 isstream@0.1.x:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/isstream/-/isstream-0.1.2.tgz#47e63f7af55afa6f92e1500e690eb8b8529c099a"
+
+javascript-decorators@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/javascript-decorators/-/javascript-decorators-1.1.1.tgz#389380eb22cda2bff3e065016999d05bc3efef6b"
+  dependencies:
+    deep-equal "^1.0.1"
+    deepcopy "^1.0.0"
 
 joi@^13.3.0:
   version "13.3.0"
@@ -2183,6 +2200,10 @@ traverse@^0.6.6:
 triple-beam@^1.1.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/triple-beam/-/triple-beam-1.2.0.tgz#8b5c1f3d491229bf6ddcf721c0ba84cef5ab51fa"
+
+type-detect@^4.0.8:
+  version "4.0.8"
+  resolved "https://registry.yarnpkg.com/type-detect/-/type-detect-4.0.8.tgz#7646fb5f18871cfbb7749e69bd39a6388eb7450c"
 
 type-is@~1.6.15, type-is@~1.6.16:
   version "1.6.16"
